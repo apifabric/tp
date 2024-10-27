@@ -1,0 +1,511 @@
+about:
+  date: October 27, 2024 17:57:52
+  recent_changes: works with modified safrs-react-admin
+  version: 0.0.0
+api_root: '{http_type}://{swagger_host}:{port}/{api}'
+authentication: '{system-default}'
+entities:
+  Address:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: customer_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: address
+      required: true
+      template: text
+      type: VARCHAR
+    description: Manages customer addresses, storing multiple addresses for a customer.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    home_template: home_template.html
+    info_list: Manages customer addresses, storing multiple addresses for a customer.
+    label: Address
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - customer_id
+      name: customer
+      resource: Customer
+    type: Address
+  Contact:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: customer_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: contact_number
+      required: true
+      template: text
+      type: VARCHAR
+    description: Manages contact information for customers.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    home_template: home_template.html
+    info_list: Manages contact information for customers.
+    label: Contact
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - customer_id
+      name: customer
+      resource: Customer
+    type: Contact
+  Customer:
+    columns:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: credit_limit
+      required: true
+      template: real
+      type: FLOAT
+    - name: balance
+      template: real
+      type: FLOAT
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Stores information about customers, including their credit limits
+      and balances.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    home_template: home_template.html
+    info_list: Stores information about customers, including their credit limits and
+      balances.
+    label: Customer
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - customer_id
+      name: AddressList
+      resource: Address
+    - direction: tomany
+      fks:
+      - customer_id
+      name: ContactList
+      resource: Contact
+    - direction: tomany
+      fks:
+      - customer_id
+      name: OrderList
+      resource: Order
+    type: Customer
+  Inventory:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: product_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: quantity_available
+      required: true
+      template: integer
+      type: INTEGER
+    description: Keeps track of product inventory status.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    home_template: home_template.html
+    info_list: Keeps track of product inventory status.
+    label: Inventory
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - product_id
+      name: product
+      resource: Product
+    type: Inventory
+  Item:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: order_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: product_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: quantity
+      required: true
+      template: integer
+      type: INTEGER
+    - name: unit_price
+      required: true
+      template: real
+      type: FLOAT
+    - name: amount
+      template: real
+      type: FLOAT
+    description: Represents individual items within an order, including quantity and
+      unit price.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    home_template: home_template.html
+    info_list: Represents individual items within an order, including quantity and
+      unit price.
+    label: Item
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - item_id
+      name: ReturnList
+      resource: Return
+    - direction: toone
+      fks:
+      - order_id
+      name: order
+      resource: Order
+    - direction: toone
+      fks:
+      - product_id
+      name: product
+      resource: Product
+    type: Item
+  Order:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: customer_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: amount_total
+      template: real
+      type: FLOAT
+    - name: note
+      template: text
+      type: VARCHAR
+    - name: date_created
+      type: DATETIME
+    - name: date_shipped
+      type: DATETIME
+    description: Holds data about customer orders, including dates and notes.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    home_template: home_template.html
+    info_list: Holds data about customer orders, including dates and notes.
+    label: Order
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - order_id
+      name: ItemList
+      resource: Item
+    - direction: tomany
+      fks:
+      - order_id
+      name: OrderNoteList
+      resource: OrderNote
+    - direction: tomany
+      fks:
+      - order_id
+      name: PaymentList
+      resource: Payment
+    - direction: tomany
+      fks:
+      - order_id
+      name: ShipmentList
+      resource: Shipment
+    - direction: toone
+      fks:
+      - customer_id
+      name: customer
+      resource: Customer
+    type: Order
+  OrderNote:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: order_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: note
+      required: true
+      template: text
+      type: VARCHAR
+    description: Captures additional notes related to an order.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    home_template: home_template.html
+    info_list: Captures additional notes related to an order.
+    label: OrderNote
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - order_id
+      name: order
+      resource: Order
+    type: OrderNote
+  Payment:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: order_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: amount
+      required: true
+      template: real
+      type: FLOAT
+    - name: date_received
+      type: DATETIME
+    description: Logs payment information against customer orders.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    home_template: home_template.html
+    info_list: Logs payment information against customer orders.
+    label: Payment
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - order_id
+      name: order
+      resource: Order
+    type: Payment
+  Product:
+    columns:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: unit_price
+      required: true
+      template: real
+      type: FLOAT
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Contains product details such as the unit price.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    home_template: home_template.html
+    info_list: Contains product details such as the unit price.
+    label: Product
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - product_id
+      name: InventoryList
+      resource: Inventory
+    - direction: tomany
+      fks:
+      - product_id
+      name: ItemList
+      resource: Item
+    type: Product
+  Return:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: item_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: reason
+      required: true
+      template: text
+      type: VARCHAR
+    description: Manages records of returned items.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    home_template: home_template.html
+    info_list: Manages records of returned items.
+    label: Return
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - item_id
+      name: item
+      resource: Item
+    type: Return
+  Shipment:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: order_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: shipment_date
+      type: DATETIME
+    - name: carrier
+      required: true
+      template: text
+      type: VARCHAR
+    description: Logs shipment information for orders.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    home_template: home_template.html
+    info_list: Logs shipment information for orders.
+    label: Shipment
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - order_id
+      name: order
+      resource: Order
+    type: Shipment
+  Supplier:
+    columns:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: contact_number
+      required: true
+      template: text
+      type: VARCHAR
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Contains supplier details who provide products.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    home_template: home_template.html
+    info_list: Contains supplier details who provide products.
+    label: Supplier
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    type: Supplier
+settings:
+  HomeJS: /admin-app/home.js
+  max_list_columns: 8
+  style_guide:
+    applicationLocales:
+    - en
+    - es
+    currency_symbol: $
+    currency_symbol_position: left
+    date_format: LL
+    decimal_max: '1000000000'
+    decimal_min: '0'
+    decimal_separator: .
+    edit_on_mode: dblclick
+    exclude_listpicker: false
+    include_translation: false
+    keycloak_client_id: alsclient
+    keycloak_realm: kcals
+    keycloak_url: http://localhost:8080
+    locale: en
+    max_decimal_digits: '4'
+    min_decimal_digits: '2'
+    mode: tab
+    pick_style: list
+    serviceType: OntimizeEE
+    startSessionPath: /auth/login
+    style: light
+    thousand_separator: ','
+    use_keycloak: false

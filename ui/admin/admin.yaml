@@ -1,0 +1,339 @@
+about:
+  date: October 27, 2024 17:57:52
+  recent_changes: works with modified safrs-react-admin
+  version: 0.0.0
+api_root: '{http_type}://{swagger_host}:{port}/{api}'
+authentication: '{system-default}'
+info:
+  number_relationships: 10
+  number_tables: 12
+info_toggle_checked: true
+resources:
+  Address:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: customer_id
+      required: true
+    - name: address
+      required: true
+    description: Manages customer addresses, storing multiple addresses for a customer.
+    info_list: Manages customer addresses, storing multiple addresses for a customer.
+    tab_groups:
+    - direction: toone
+      fks:
+      - customer_id
+      name: customer
+      resource: Customer
+    type: Address
+    user_key: id
+  Contact:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: customer_id
+      required: true
+    - name: contact_number
+      required: true
+    description: Manages contact information for customers.
+    info_list: Manages contact information for customers.
+    tab_groups:
+    - direction: toone
+      fks:
+      - customer_id
+      name: customer
+      resource: Customer
+    type: Contact
+    user_key: id
+  Customer:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: credit_limit
+      required: true
+    - name: balance
+    - name: id
+    description: Stores information about customers, including their credit limits
+      and balances.
+    info_list: Stores information about customers, including their credit limits and
+      balances.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - customer_id
+      name: AddressList
+      resource: Address
+    - direction: tomany
+      fks:
+      - customer_id
+      name: ContactList
+      resource: Contact
+    - direction: tomany
+      fks:
+      - customer_id
+      name: OrderList
+      resource: Order
+    type: Customer
+    user_key: name
+  Inventory:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: product_id
+      required: true
+    - name: quantity_available
+      required: true
+    description: Keeps track of product inventory status.
+    info_list: Keeps track of product inventory status.
+    tab_groups:
+    - direction: toone
+      fks:
+      - product_id
+      name: product
+      resource: Product
+    type: Inventory
+    user_key: id
+  Item:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: order_id
+      required: true
+    - name: product_id
+      required: true
+    - name: quantity
+      required: true
+    - name: unit_price
+      required: true
+    - name: amount
+    description: Represents individual items within an order, including quantity and
+      unit price.
+    info_list: Represents individual items within an order, including quantity and
+      unit price.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - item_id
+      name: ReturnList
+      resource: Return
+    - direction: toone
+      fks:
+      - order_id
+      name: order
+      resource: Order
+    - direction: toone
+      fks:
+      - product_id
+      name: product
+      resource: Product
+    type: Item
+    user_key: id
+  Order:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: customer_id
+      required: true
+    - name: amount_total
+    - name: note
+    - name: date_created
+      type: DATETIME
+    - name: date_shipped
+      type: DATETIME
+    description: Holds data about customer orders, including dates and notes.
+    info_list: Holds data about customer orders, including dates and notes.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - order_id
+      name: ItemList
+      resource: Item
+    - direction: tomany
+      fks:
+      - order_id
+      name: OrderNoteList
+      resource: OrderNote
+    - direction: tomany
+      fks:
+      - order_id
+      name: PaymentList
+      resource: Payment
+    - direction: tomany
+      fks:
+      - order_id
+      name: ShipmentList
+      resource: Shipment
+    - direction: toone
+      fks:
+      - customer_id
+      name: customer
+      resource: Customer
+    type: Order
+    user_key: id
+  OrderNote:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: order_id
+      required: true
+    - name: note
+      required: true
+    description: Captures additional notes related to an order.
+    info_list: Captures additional notes related to an order.
+    tab_groups:
+    - direction: toone
+      fks:
+      - order_id
+      name: order
+      resource: Order
+    type: OrderNote
+    user_key: id
+  Payment:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: order_id
+      required: true
+    - name: amount
+      required: true
+    - name: date_received
+      type: DATETIME
+    description: Logs payment information against customer orders.
+    info_list: Logs payment information against customer orders.
+    tab_groups:
+    - direction: toone
+      fks:
+      - order_id
+      name: order
+      resource: Order
+    type: Payment
+    user_key: id
+  Product:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: unit_price
+      required: true
+    - name: id
+    description: Contains product details such as the unit price.
+    info_list: Contains product details such as the unit price.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - product_id
+      name: InventoryList
+      resource: Inventory
+    - direction: tomany
+      fks:
+      - product_id
+      name: ItemList
+      resource: Item
+    type: Product
+    user_key: name
+  Return:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: item_id
+      required: true
+    - name: reason
+      required: true
+    description: Manages records of returned items.
+    info_list: Manages records of returned items.
+    tab_groups:
+    - direction: toone
+      fks:
+      - item_id
+      name: item
+      resource: Item
+    type: Return
+    user_key: id
+  Shipment:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: order_id
+      required: true
+    - name: shipment_date
+      type: DATETIME
+    - name: carrier
+      required: true
+    description: Logs shipment information for orders.
+    info_list: Logs shipment information for orders.
+    tab_groups:
+    - direction: toone
+      fks:
+      - order_id
+      name: order
+      resource: Order
+    type: Shipment
+    user_key: id
+  Supplier:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: contact_number
+      required: true
+    - name: id
+    description: Contains supplier details who provide products.
+    info_list: Contains supplier details who provide products.
+    type: Supplier
+    user_key: name
+settings:
+  HomeJS: /admin-app/home.js
+  max_list_columns: 8
+  style_guide:
+    applicationLocales:
+    - en
+    - es
+    currency_symbol: $
+    currency_symbol_position: left
+    date_format: LL
+    decimal_max: '1000000000'
+    decimal_min: '0'
+    decimal_separator: .
+    detail_mode: tab
+    edit_on_mode: dblclick
+    exclude_listpicker: false
+    include_translation: 'false'
+    keycloak_client_id: alsclient
+    keycloak_realm: kcals
+    keycloak_url: http://localhost:8080
+    locale: en
+    max_decimal_digits: '4'
+    min_decimal_digits: '2'
+    new_mode: dialog
+    pick_style: list
+    row_height: small,
+    serviceType: OntimizeEE
+    startSessionPath: /auth/login
+    style: light
+    thousand_separator: ','
+    use_keycloak: 'false'
